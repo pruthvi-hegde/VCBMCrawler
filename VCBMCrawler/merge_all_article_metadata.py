@@ -17,10 +17,10 @@ def merge_json_files(filename):
             result.append(json.load(infile))
 
     file_content = json.dumps(result)
-    with open('all_article_metadata.json', 'w') as output_file:
+    with open('all_articles_metadata.json', 'w') as output_file:
         output_file.write(file_content)
 
 
 if __name__ == "__main__":
-    filename = get_files('article_metadata')
+    filename = get_files('articles_metadata')
     merge_json_files(filename)

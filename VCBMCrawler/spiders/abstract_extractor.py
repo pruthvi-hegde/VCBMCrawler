@@ -8,11 +8,9 @@ from scrapy.selector import Selector
 import json
 
 
-# use this command to run this file.
-# `scrapy crawl meta` from inside VCBMCrawler
-
+# `scrapy crawl abstract` from inside VCBMCrawler
 class EgworkSpider(CrawlSpider):
-    name = 'meta'
+    name = 'abstract'
     allowed_domains = ['diglib.eg.org']
     start_urls = [
         'https://diglib.eg.org/handle/10.2312/466/recent-submissions',
@@ -47,48 +45,44 @@ class EgworkSpider(CrawlSpider):
 
         hxs = Selector(response)
         publication_title = hxs.xpath('//title/text()').get()
-
         abstract = hxs.xpath('//meta[@name="DCTERMS.abstract"]/@content').get()
-
+        citation_keywords = hxs.xpath('//meta[@name="DC.subject"]/@content').get()
         article_authors = hxs.xpath('//meta[@name="DC.creator"]/@content').getall()
-        article_contributors = hxs.xpath('//meta[@name="DC.contributor"]/@content').getall()
-
-        publisher = hxs.xpath('//meta[@name="DC.publisher"]/@content').get()
-        published_year =  hxs.xpath('//meta[@name="DCTERMS.issued"]/@content').get()
-
-        article_details = hxs.xpath('//meta[@name="DC.identifier"]/@content').getall()
-        citation_keywords = hxs.xpath('//meta[@name="DC.subject"]/@content').getall()
         dirname = os.getcwd()
-        collection_path = os.path.join(dirname, "VCBMCrawler/articles_metadata")
+        #collection_path = os.path.join(dirname, "publicationsDownload/abstracts/")
+        collection_path = os.path.join(dirname, "VCBMCrawler/articles_titles_and_abstract/")
+        #collection_path = os.path.join(dirname, "publicationsDownload/articles_metadata/")
 
-        # file_name = publication_title + ".json"
+        # file_name = publication_title.replace('/', '-') + ".json"
 
         file_name = publication_title.replace('/', '-') + ".txt"
         save_path = os.path.join(collection_path, file_name)
-
-        data = {
-             'article_title' : publication_title,
-             'article_authors': ','.join(str(e).replace(","," ") for e in article_authors if article_authors is not None),
-             #'article_contributors' : article_contributors,
-             'publisher' : publisher,
-
-             'published_year' : published_year,
-             'ISSN': article_details[0],
-             'ISBN': article_details[1],
-              'DOI' : article_details[2],
-
-             'keywords': ','.join(str(e).replace(","," ") for e in citation_keywords if citation_keywords is not None),
-             'abstract': abstract
-        }
-        json_string = json.dumps(data)
+        #
+        # data = {
+        #     'keywords': citation_keywords,
+        #     'article_authors': article_authors
+        #
+        # }
+        # json_string = json.dumps(data)
         # print(json_string)
 
         try:
-            self.logger.info('Saving json file %s', save_path)
+            self.logger.info('Saving PDF %s', save_path)
             with open(save_path, 'w') as file:
-                file.write(json_string)
+                file.write(file_name.replace(".txt", ". "))
+                file.write(abstract)
         except FileExistsError:
             print("File Exist")
 
 
-
+    # def save_pdf(self, response):
+    #     """ Save pdf files """
+    #     file_name = (response.meta.get('publication_title')).replace('/', '-') + ".pdf"
+    #     dirname = os.getcwd()
+    #     collection_path = os.path.join(dirname, "publications/")
+    #
+    #     save_path = os.path.join(collection_path, file_name)
+    #
+    #     self.logger.info('Saving PDF %s', save_path)
+    #     with open(save_path, 'wb') as file:
+    #         file.write(response.body)
