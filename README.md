@@ -3,7 +3,7 @@ This repository contains the code to scrape VCBM publications metadata from Euro
 
 ## First Step
 Activate your virtual environment and run,
-pip install scrapy
+`pip install scrapy`
 
 ## To download VCBM publications (2008 - 2021)
 Navigate to VCBMCrawler and run,
