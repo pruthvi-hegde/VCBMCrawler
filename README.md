@@ -14,6 +14,6 @@ Navigate to VCBMCrawler and run,
 `scrapy crawl meta`
 
 ## To merge metadata from publications to single file run,
-python merge_all_article_metadata.py 
+`python merge_all_article_metadata.py` 
 
 
