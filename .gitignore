@@ -1,0 +1,5 @@
+/VCBMCrawler/articles_metadata
+/VCBMCrawler/articles_titles_and_abstract
+**/__pycache__/
+.DS_Store
+.idea/
